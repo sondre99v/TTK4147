@@ -1,0 +1,14 @@
+Using sleep()
+real    0m1.008s
+user    0m0.000s
+sys     0m0.000s
+
+Busywait using clock_gettime()
+real    0m1.008s
+user    0m0.438s
+sys     0m0.547s
+
+Busywait using times()
+real    0m1.001s
+user    0m0.219s
+sys     0m0.766s
