@@ -4,11 +4,11 @@
 #include "timespec.h"
 
 void busy_wait(struct timespec t);
-void busywaitB();
+void busy_wait2();
 
 int main(int argc, char* argv[])
 {
-	struct timespec oneSec = {
+	struct timespec one_sec = {
 		.tv_sec = 1,
 		.tv_nsec = 0
 	};
@@ -19,11 +19,11 @@ int main(int argc, char* argv[])
 	}
 	else if (strcmp(argv[1], "-busyclock") == 0)
 	{
-		busy_wait(oneSec);
+		busy_wait(one_sec);
 	}
 	else if (strcmp(argv[1], "-busytimes") == 0)
 	{
-		busywaitB();
+		busy_wait2();
 	}
 
 	return 0;
@@ -37,13 +37,11 @@ void busy_wait(struct timespec t)
     
     while(timespec_cmp(now, then) < 0)
     {
-        for(int i = 0; i < 10000; i++) { }
-
         clock_gettime(CLOCK_MONOTONIC, &now);
     }
 }
 
-void busywaitB()
+void busy_wait2()
 {
 	struct tms start_cpu;
 	clock_t start_time = times(&start_cpu);
@@ -51,12 +49,10 @@ void busywaitB()
 	struct tms end_cpu;
 	clock_t end_time;
 
-	int oneSecond = sysconf(_SC_CLK_TCK);
+	int one_second = sysconf(_SC_CLK_TCK);
 
     do
     {
-        for(int i = 0; i < 10000; i++) { }
-
         end_time = times(&end_cpu);
-    } while(end_time - start_time < oneSecond);
+    } while(end_time - start_time < one_second);
 }
