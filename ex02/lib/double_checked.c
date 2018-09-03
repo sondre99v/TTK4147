@@ -1,4 +1,4 @@
-//usr/bin/clang "$0" -o double_checked -std=gnu11 -g -O3 -lpthread && exec ./double_checked
+//usr/bin/clang "$0" -o double_checked -std=gnu11 -g -O3 -lpthread -fsanitize=thread && exec ./double_checked
 #include <stdio.h>
 #include <semaphore.h>
 #include <pthread.h>
@@ -57,9 +57,9 @@ void* singletonUser(void* args){
     nonOptimizedBusyWait();
 
     struct Singleton* s = getSingleton();
-    
-    printf("Got singleton %p:{%lu %lu %lu %lu}\n", 
-        (void*)s, s->a, s->b, s->c, s->d);
+
+    printf("%02d Got singleton %p:{%lu %lu %lu %lu}\n", 
+        (int)args, (void*)s, s->a, s->b, s->c, s->d);
     
     return NULL;
 }
@@ -72,7 +72,7 @@ int main(){
     long numThreads = sizeof(threadHandles)/sizeof(*threadHandles);
     
     for(long i = 0; i < numThreads; i++){
-        pthread_create(&threadHandles[i], NULL, singletonUser, NULL);
+        pthread_create(&threadHandles[i], NULL, singletonUser, i);
     }
 
     for(long i = 0; i < numThreads; i++){
