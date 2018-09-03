@@ -1,31 +1,49 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <pthread.h>
 #include <semaphore.h>
 
-long global = 0;
-sem_t sem;
+#define N 6
+
+static inline void eatSlowly(void){
+    for(long i = 0; i < 10000000; i++){
+        // "Memory clobber" - tells the compiler optimizer that all the memory 
+        // is being touched, and that therefore the loop cannot be optimized out
+        asm volatile("" ::: "memory");
+    }
+}
+
+pthread_mutex_t chpstcks[N];
 
 void* fn(void* args) {
-    long local = 0;
-    for (int i = 0; i < 50e6; i++) {
-        sem_wait(&sem);
-        global++;
-        sem_post(&sem);
-        local++;
+    int n = (int)args;
+
+    for(;;) {
+        pthread_mutex_lock(&chpstcks[n]);
+        pthread_mutex_lock(&chpstcks[(n+1)%N]);
+
+        printf("%d eating...\n", n);
+        eatSlowly();
+
+        pthread_mutex_unlock(&chpstcks[n]);
+        pthread_mutex_unlock(&chpstcks[(n+1)%N]);
     }
-    printf("Thread: %s, Global: %ld, Local: %ld\n",
-        (char*)args, global, local);
-    fflush(stdout);
+
     return NULL;
 }
 
 int main(int argc, char* argv[]) {
-    sem_init(&sem, 0, 1);
-    pthread_t threadHandle1;
-    pthread_t threadHandle2;
-    pthread_create(&threadHandle1, NULL, fn, "1");
-    pthread_create(&threadHandle2, NULL, fn, "2");
-    pthread_join(threadHandle1, NULL);
-    pthread_join(threadHandle2, NULL);
+    pthread_t phils[N];
+    
+    for (int i = 0; i < N; i++) {
+        pthread_create(&phils[i], NULL, fn, (void*)i);
+    }
+
+    for (int i = 0; i < N; i++) {
+        pthread_join(phils[i], NULL);
+    }
+
+    printf("Done!\n");
+
     return 0;
 }
