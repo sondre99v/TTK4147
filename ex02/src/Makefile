@@ -3,9 +3,9 @@ COMPILER = clang
 # program executable name 
 TARGET = main 
 # compiler flags 
-CFLAGS = -g -Wall -fsanitize=thread
+CFLAGS = -g -Wall
 # linker flags 
-LDFLAGS = -g -lpthread -fsanitize=thread
+LDFLAGS = -g -lpthread
 # list of sources 
 SOURCES = $(shell find -name "*.c") 
 # default rule, to compile everything 

@@ -1,0 +1,18 @@
+Thread: 1, Global: 50872105, Local: 50000000
+Thread: 2, Global: 51287542, Local: 50000000
+
+real	0m0.223s
+user	0m0.428s
+sys	0m0.004s
+
+student@itk-d650-ubuntu:~/Desktop/deleteme/TTK4147/ex02/src$ ./run.sh
+
+clang -g -Wall -c -o main.o main.c 
+clang -g -lpthread -o main main.o 
+Thread: 2, Global: 97133276, Local: 50000000
+Thread: 1, Global: 100000000, Local: 50000000
+
+real	0m24.655s
+user	0m25.116s
+sys	0m24.024s
+student@itk-d650-ubunt
