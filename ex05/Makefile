@@ -1,5 +1,5 @@
 # selected compiler (gcc/clang/etc.)
-COMPILER = gcc
+COMPILER = clang
 # program executable name 
 TARGET = main 
 # compiler flags 
