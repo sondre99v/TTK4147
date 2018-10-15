@@ -2,3 +2,12 @@
 *.o
 *.ko
 *.tar*
+*.o
+*.depend
+.*.cmd
+*.ko
+*.mod.c
+.tmp_versions
+*.order
+*.symvers
+
