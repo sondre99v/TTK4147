@@ -1,0 +1,14 @@
+
+
+error       = reference - y;
+integral    += error * dt;
+derivative  = (error - prev_error) / dt;
+prev_error  = error;    
+
+return  Kp * error      +
+        Ki * integral   +
+        Kd * derivative;
+
+
+
+
