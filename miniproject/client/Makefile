@@ -20,7 +20,7 @@ $(TARGET): $(OBJECTS)
 	$(COMPILER) $(CFLAGS) -c -o $@ $< 
 # cleaning 
 clean: 
-	rm -f $(TARGET) $(OBJECTS) 
+	rm -rf $(TARGET) $(OBJECTS) 
 # cleaning and building
 rebuild:
 	make clean

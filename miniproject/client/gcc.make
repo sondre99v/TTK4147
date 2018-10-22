@@ -1,4 +1,3 @@
-INCLUDE = -I../lib/network -I../lib/time
 # selected compiler (gcc/clang/etc.)
 COMPILER = gcc
 # program executable name 
