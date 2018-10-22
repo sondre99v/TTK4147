@@ -9,7 +9,12 @@
 #define GET_ACK_VALUE_OFFSET 8
 #define COM_BUFSIZE		64
 
+#ifndef RUN_ON_LOCALHOST
 #define SERVER_IP "192.168.0.1"
+#else
+#define SERVER_IP "127.0.0.1"
+#endif
+#define SERVER_PORT 9999
 
 #define UDP_SEND(str) udpconn_send(conn, (str))
 #define UDP_RECV() udpconn_receive(conn, recvBuf, sizeof(recvBuf))
@@ -22,7 +27,8 @@ static char recvBuf[COM_BUFSIZE];
 
 
 void com_init() {
-    conn = udpconn_new(SERVER_IP, 9999);
+	printf("Server: %s:%d\n", SERVER_IP, SERVER_PORT);
+    conn = udpconn_new(SERVER_IP, SERVER_PORT);
     memset(recvBuf, 0, sizeof(recvBuf));
     com_send_command(START, 0);
 }

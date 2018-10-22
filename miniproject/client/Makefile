@@ -1,5 +1,5 @@
 # selected compiler (gcc/clang/etc.)
-COMPILER = avr32-linux-gcc
+COMPILER ?= avr32-linux-gcc
 # program executable name 
 TARGET = main 
 # compiler flags 
