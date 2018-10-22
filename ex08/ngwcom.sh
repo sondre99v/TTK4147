@@ -1,1 +1,1 @@
-alias ngwcom="minicom -D /dev/ttyS0 -C"
+alias ngwcom="minicom -D /dev/ttyS0 --color=on"

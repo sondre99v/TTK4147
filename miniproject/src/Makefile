@@ -1,13 +1,13 @@
 # selected compiler (gcc/clang/etc.)
-COMPILER = gcc
+COMPILER = avr32-linux-gcc
 # program executable name 
 TARGET = main 
 # compiler flags 
-CFLAGS = -g -Wall -std=gnu11
+CFLAGS = -g -Wall
 # linker flags 
-LDFLAGS = -g -pthread
+LDFLAGS = -g -lpthread
 # list of sources 
-SOURCES = $(shell find -name "*.c") 
+SOURCES = $(shell find -name "*.c")
 # default rule, to compile everything 
 all: $(TARGET) 
 # define object files 

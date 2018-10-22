@@ -1,5 +1,8 @@
+#ifndef _TIME_H_
+#define _TIME_H_
 
 #include <time.h>
+#include <unistd.h>
 #include <sys/syscall.h>
 
 
@@ -35,3 +38,6 @@ int timespec_cmp(struct timespec lhs, struct timespec rhs){
         return 1;
     return lhs.tv_nsec - rhs.tv_nsec;
 }
+
+#endif
+
