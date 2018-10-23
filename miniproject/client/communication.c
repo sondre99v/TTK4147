@@ -16,7 +16,7 @@
 #endif
 #define SERVER_PORT 9999
 
-#define UDP_SEND(str) udpconn_send(conn, (str))
+#define UDP_SEND() udpconn_send(conn, sendBuf)
 #define UDP_RECV() udpconn_receive(conn, recvBuf, sizeof(recvBuf))
 
 
@@ -76,5 +76,5 @@ void com_send_command(com_cmd_t cmd, float value) {
 	}
 
 	//printf("Sending: %s\n", sendBuf);
-	UDP_SEND(sendBuf);
+	UDP_SEND();
 }
