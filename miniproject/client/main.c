@@ -21,7 +21,6 @@ int main (int argc, char *argv[]) {
 	com_init();
 	
 	pthread_t listener_thread;
-	pthread_t responder_thread;
 	pthread_t controller_thread;
 
 	sem_init(&ctrl_sem, 0, 0);
@@ -73,7 +72,7 @@ void* listener_thread_function(void* args) {
 #define Kd   0 // [s]
 #define dt_ns (4ULL * 1000 * 1000) // [ns]
 #define dt (1e-9 * dt_ns) // [s]
-#define freq (unsigned int)(1.0/dt)
+#define freq (unsigned int)(1.0/dt) // [Hz]
 
 float pid (float error) {
 	static float prev_error = 0;
