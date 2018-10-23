@@ -93,7 +93,7 @@ void* responder_thread_function(void* args) {
 #define Kp 10 // [1]
 #define Ki 800 // [s^-1]
 #define Kd 0 // [s]
-#define dt_ns (1ULL * 1000 * 1000) // [ns]
+#define dt_ns (4ULL * 1000 * 1000) // [ns]
 #define dt (1e-9 * dt_ns) // [s]
 #define steps_per_sec (unsigned int)(1.0/dt)
 
@@ -124,7 +124,7 @@ void* controller_thread_function(void* args) {
 
 	float y;
 	int i;
-	for (i = 0; i < steps_per_sec; i++){
+	for (i = 0; i < steps_per_sec*2; i++){
 		waketime = timespec_add(waketime, period);
 
 		com_send_command(GET, 0);
@@ -133,7 +133,9 @@ void* controller_thread_function(void* args) {
 
 		y = global_value_variable;
 
-		float u = pid(1.0 - y);
+		float reference = i < steps_per_sec ? 1 : 0;
+
+		float u = pid(reference - y);
 
 		com_send_command(SET, u);
 
