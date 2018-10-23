@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Plot 4</title>
+
+	<script type="text/javascript">
+	window.onload = function() {
+	    var image = document.getElementById("img");
+
+	    function updateImage() {
+	        image.src = image.src.split("?")[0] + "?" + new Date().getTime();
+	    }
+
+	    setInterval(updateImage, 1000);
+	}
+	</script>
+
+</head>
+<body>
+
+	<img id="img" src="plot4.png">
+
+</body>
+</html>
