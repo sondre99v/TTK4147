@@ -1,5 +1,4 @@
 #include "communication.h"
-//#include "../lib/network/udp.h"
 #include "lib/network/udp.h"
 
 #include <stdlib.h>
@@ -25,7 +24,6 @@ static UDPConn* conn;
 static char sendBuf[COM_BUFSIZE];
 static char recvBuf[COM_BUFSIZE];
 
-
 void com_init() {
 	printf("Server: %s:%d\n", SERVER_IP, SERVER_PORT);
     conn = udpconn_new(SERVER_IP, SERVER_PORT);
@@ -40,7 +38,6 @@ void com_close() {
 
 com_cmd_t com_receive_command(float* value) {
 	UDP_RECV();
-
 	//printf("Received: %s\n", recvBuf);
 
 	switch(recvBuf[0]) {
