@@ -67,9 +67,9 @@ void* listener_thread_function(void* args) {
 
 /** CONTROLLER THREAD **/
 
-#define Kp  10 // [1]
-#define Ki 800 // [s^-1]
-#define Kd   0 // [s]
+#define Kp   10.0 // [1]
+#define Ki 1000.0 // [s^-1]
+#define Kd 0.0001 // [s]
 #define dt_ns (4ULL * 1000 * 1000) // [ns]
 #define dt (1e-9 * dt_ns) // [s]
 #define freq (unsigned int)(1.0/dt) // [Hz]
@@ -85,9 +85,9 @@ float pid (float error) {
 }
 
 void* controller_thread_function(void* args) {
-	printf("Kp = %d, ", Kp);
-	printf("Ki = %d, ", Ki);
-	printf("Kd = %d\n", Kd);
+	printf("Kp = %f, ", Kp);
+	printf("Ki = %f, ", Ki);
+	printf("Kd = %f\n", Kd);
 	printf("dt = %f\n", dt);
 	printf("Steps/sec = %u\n", freq);
 

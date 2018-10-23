@@ -26,4 +26,4 @@ rebuild:
 	make clean
 	make all
 local:
-	make COMPILER=gcc LDFLAGS=-pthread CFLAGS+="-Wall -DRUN_ON_LOCALHOST -Ofast"
+	make COMPILER=gcc LDFLAGS="-pthread -Ofast" CFLAGS+="-fdump-tree-optimized -Wall -DRUN_ON_LOCALHOST -Ofast"
