@@ -1,27 +1,14 @@
 #!/bin/bash
 
-# This script tests the implementation locally
+# This script tests the implementation locally by iterating arguments
 
-make clean > /dev/null
-make COMPILER=gcc LDFLAGS=-pthread CFLAGS="-Wall -DRUN_ON_LOCALHOST" > /dev/null
+cd $(dirname $0)
 
-Kp=7
-
-if [ $? -eq 0 ]
-then
-	echo "Build successfull. Running tests..."
+for i in `seq 50 60`;
+do
+	./run_local.sh $i $i
 	cd ../server
-	rm -rf *.dat
-	for i in `seq 1 100`;
-    do
-    	./miniproject-server &
-		../client/main $i
-		echo STOP > /dev/udp/127.0.0.1/9999
-		gnuplot plot4
-		mv plot4.png $i.png
-		echo $i
-    done   
-else
-	echo "Build failed."
-	exit 1
-fi
+	mkdir -p batch
+	mv *.png *.dat batch
+	cd ../client
+done
