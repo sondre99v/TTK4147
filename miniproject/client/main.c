@@ -22,8 +22,14 @@ void* responder_thread_function(void* args);
 void* controller_thread_function(void* args);
 
 static sem_t ctrl_sem;
+float argf = 0;
 
 int main (int argc, char *argv[]) {
+	if (argc > 1) {
+		printf("Optional argument: %s\n", argv[1]);
+		argf = atof(argv[1]);
+	}
+
 	com_init();
 	
 	pthread_t listener_thread;
@@ -131,7 +137,11 @@ void* controller_thread_function(void* args) {
 
 		com_send_command(SET, u);
 
+		#ifdef WINDOWS
+		usleep(dt_ns/1000); // Disregarding PID delay
+		#else
 		clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &waketime, NULL);
+		#endif
 	}
 
 	com_close();
