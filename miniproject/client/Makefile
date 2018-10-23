@@ -3,9 +3,9 @@ COMPILER ?= avr32-linux-gcc
 # program executable name 
 TARGET = main 
 # compiler flags 
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall -Ofast
 # linker flags 
-LDFLAGS = -g -lpthread
+LDFLAGS = -g -lpthread -Ofast
 # list of sources 
 SOURCES = $(shell find -name "*.c")
 # default rule, to compile everything 
@@ -26,4 +26,4 @@ rebuild:
 	make clean
 	make all
 local:
-	make COMPILER=gcc LDFLAGS=-pthread CFLAGS="-Wall -DRUN_ON_LOCALHOST"
+	make COMPILER=gcc LDFLAGS=-pthread CFLAGS+="-Wall -DRUN_ON_LOCALHOST -Ofast"
