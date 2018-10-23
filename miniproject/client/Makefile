@@ -25,3 +25,5 @@ clean:
 rebuild:
 	make clean
 	make all
+local:
+	make COMPILER=gcc LDFLAGS=-pthread CFLAGS="-Wall -DRUN_ON_LOCALHOST"

@@ -3,7 +3,7 @@
 # This script tests the implementation locally
 
 make clean > /dev/null
-make COMPILER=gcc LDFLAGS=-pthread CFLAGS="-Wall -DRUN_ON_LOCALHOST" > /dev/null
+make local > /dev/null
 
 if [ $? -eq 0 ]
 then
@@ -16,12 +16,6 @@ then
 	gnuplot plot4
 	rm -rf local
 	mkdir -p local
-	# mv *.dat *.png local
-	# if [ $? -eq 0 ]; then
-	# 	echo "yo"
-	# else
-	# 	echo "Cannot maybe plot results"
-	# fi
 	exit 0
 else
 	echo "Build failed."
