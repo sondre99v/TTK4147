@@ -1,5 +1,3 @@
-
-
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -9,7 +7,6 @@
 #include <netdb.h>
 
 #include "udp.h"
-
 
 UDPConn* udpconn_new(char* ip, short port){
 

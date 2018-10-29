@@ -9,21 +9,23 @@
 void* listener_thread_function(void* args);
 void* controller_thread_function(void* args);
 
-static sem_t ctrl_sem;
-float argf = 0;
+#define CLOCK_SOURCE CLOCK_REALTIME
 
-int main (int argc, char *argv[]) {
-	if (argc > 1) {
-		printf("Optional argument: %s\n", argv[1]);
-		argf = atof(argv[1]);
-	}
+#define Kp 2e1 // [1]
+#define Ki 1e3 // [s^-1]
+#define Kd 1e-2 // [s]
+#define period_ns (3ULL * 1000 * 1000) // [ns]
 
+static sem_t controller_semaphore;
+static float y_recieved = 0;
+
+int main (int argc, char* argv[]) {
 	com_init();
+
+	sem_init(&controller_semaphore, 0, 0);
 	
 	pthread_t listener_thread;
 	pthread_t controller_thread;
-
-	sem_init(&ctrl_sem, 0, 0);
 
 	if (pthread_create(&listener_thread, NULL, listener_thread_function, NULL) ||
 		pthread_create(&controller_thread, NULL, controller_thread_function, NULL))
@@ -32,19 +34,20 @@ int main (int argc, char *argv[]) {
 		return 1;
 	}
 
-	if (pthread_join(listener_thread, NULL) || 
-		pthread_join(controller_thread, NULL))
-	{
-		fprintf(stderr, "Error joining one or more threads!\n");
-		return 2;
-	}
+	/* Wait until controller thread returns. */
+	pthread_join(controller_thread, NULL);
+
+
+	/* Since the listener thread locks on UDP receive, and no timeout
+	 * is spesified, the listener thread will never return.
+	 * Therefore, we don't join it, and let the OS mop it up for us.
+	 */
 
 	return 0;
 }
 
-/** LISTENER THREAD **/
 
-float global_value_variable = 0;
+/** LISTENER THREAD **/
 
 void* listener_thread_function(void* args) {
 	while (1) {
@@ -54,71 +57,65 @@ void* listener_thread_function(void* args) {
 				com_send_command(SIGNAL_ACK, 0);
 				break;
 			case GET_ACK:
-				global_value_variable = value;
-				sem_post(&ctrl_sem);
+				y_recieved = value;
+				sem_post(&controller_semaphore);
 				break;
 			default:
-				printf("Received unknown\n");
 				break;
 		}
 	}
+
+	return NULL; /* Suppress compiler warning */
 }
 
 
 /** CONTROLLER THREAD **/
 
-#define Kp   10.0 // [1]
-#define Ki 1000.0 // [s^-1]
-#define Kd 0.0001 // [s]
-#define dt_ns (4ULL * 1000 * 1000) // [ns]
-#define dt (1e-9 * dt_ns) // [s]
-#define freq (unsigned int)(1.0/dt) // [Hz]
+#define dt (1e-9 * period_ns) // [s]
+#define iterations_per_second (unsigned int)(1.0 / dt) // [Hz]
 
 float pid (float error) {
 	static float prev_error = 0;
 	static float integral = 0;
 
 	integral += error * dt;
+
 	float derivative = (error - prev_error) / dt;
+
 	prev_error = error;
+
 	return Kp * error + Ki * integral + Kd * derivative;
 }
 
 void* controller_thread_function(void* args) {
-	printf("Kp = %f, ", Kp);
-	printf("Ki = %f, ", Ki);
-	printf("Kd = %f\n", Kd);
-	printf("dt = %f\n", dt);
-	printf("Steps/sec = %u\n", freq);
-
 	struct timespec waketime;
-	struct timespec period = {.tv_sec = 0, .tv_nsec = dt_ns};
-	clock_gettime(CLOCK_REALTIME, &waketime);
+	struct timespec period = {.tv_sec = 0, .tv_nsec = period_ns};
+	clock_gettime(CLOCK_SOURCE, &waketime);
 
-	float y;
 	unsigned int i;
-	for (i = 0; i < freq*2; i++){
+	for (i = 0; i < 2ULL * iterations_per_second; i++) {
 		waketime = timespec_add(waketime, period);
 
-		com_send_command(GET, 0);
-		sem_timedwait(&ctrl_sem, &waketime);
+		float reference = (i < iterations_per_second) ? 1.0 : 0.0;
 
-		y = global_value_variable;
-		float reference = i < freq ? 1 : 0;
+		/* Request new system measurement, only if no data is yet unhandled */
+		int sem_val;
+		sem_getvalue(&controller_semaphore, &sem_val);
+		if (sem_val == 0) {
+			com_send_command(GET, 0);
+		}
+		
+		/* Wait until listener thread receives a system measurement */
+		sem_timedwait(&controller_semaphore, &waketime);
+		float y = y_recieved;
 		float u = pid(reference - y);
 
 		com_send_command(SET, u);
 
-		#ifdef WINDOWS
-		usleep(dt_ns/1000); // Disregarding PID delay
-		#else
-		clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &waketime, NULL);
-		#endif
+		clock_nanosleep(CLOCK_SOURCE, TIMER_ABSTIME, &waketime, NULL);
 	}
 
 	com_close();
-	
-	exit(0); /* FIXME */
 
 	return NULL;
 }

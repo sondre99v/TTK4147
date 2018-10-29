@@ -5,11 +5,9 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 
-
 int clock_nanosleep(clockid_t clock_id, int flags, const struct timespec* request, struct timespec* remain) {
     return syscall(__NR_clock_nanosleep, clock_id, flags, request, remain);
 } 
-
 
 struct timespec timespec_normalized(time_t sec, long nsec){
     while(nsec >= 1000000000){
@@ -40,4 +38,3 @@ int timespec_cmp(struct timespec lhs, struct timespec rhs){
 }
 
 #endif
-

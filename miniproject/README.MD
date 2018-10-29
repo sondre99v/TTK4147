@@ -2,5 +2,5 @@
 
 ## Folder structure
 
-    ┎lib: Library files (handed out)
-    ┖src: Source code (own work)
+    ┎client: Source code and build scripts
+    ┖server: Server back-end and gnuplot configurations

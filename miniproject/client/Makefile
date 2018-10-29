@@ -3,9 +3,9 @@ COMPILER ?= avr32-linux-gcc
 # program executable name 
 TARGET = main 
 # compiler flags 
-CFLAGS = -g -Wall -Ofast
+CFLAGS = -g -Wall -O3
 # linker flags 
-LDFLAGS = -g -lpthread -Ofast
+LDFLAGS = -g -lpthread
 # list of sources 
 SOURCES = $(shell find -name "*.c")
 # default rule, to compile everything 

@@ -6,13 +6,9 @@
 #include <string.h>
 
 #define GET_ACK_VALUE_OFFSET 8
-#define COM_BUFSIZE		64
+#define COM_BUFSIZE 64
 
-#ifndef RUN_ON_LOCALHOST
 #define SERVER_IP "192.168.0.1"
-#else
-#define SERVER_IP "127.0.0.1"
-#endif
 #define SERVER_PORT 9999
 
 #define UDP_SEND() udpconn_send(conn, sendBuf)
@@ -38,7 +34,6 @@ void com_close() {
 
 com_cmd_t com_receive_command(float* value) {
 	UDP_RECV();
-	//printf("Received: %s\n", recvBuf);
 
 	switch(recvBuf[0]) {
 		case 'S': 
@@ -72,6 +67,5 @@ void com_send_command(com_cmd_t cmd, float value) {
 			return;
 	}
 
-	//printf("Sending: %s\n", sendBuf);
 	UDP_SEND();
 }

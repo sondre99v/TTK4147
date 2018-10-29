@@ -1,12 +1,12 @@
 #parameters
-interval_bw=500
-controller_response_bw=500
-signal_response_bw=500
+interval_bw=200
+controller_response_bw=200
+signal_response_bw=200
 
 
 #Global
-set term png enhanced size 1280,1024
-set output "plot5.png"
+set term svg enhanced size 1280,1024
+set output "plot5.svg"
 unset key
 set multiplot
 set size 0.5, 0.5
@@ -33,7 +33,7 @@ set origin 0.5, 0.66
 set title "Period time (interval between GET requests)"
 set xlabel "time (us)"
 set ylabel "number"
-set xrange [0:14000]
+set xrange [0:6000]
 set style fill solid border -1
 
 set boxwidth interval_bw
