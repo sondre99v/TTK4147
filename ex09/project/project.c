@@ -20,7 +20,7 @@ void* client(void*);
 void* server(void*);
 
 int main(int argc, char *argv[]) {
-	int channel_id = ChannelCreate(0);//_NTO_CHF_FIXED_PRIORITY);
+	int channel_id = ChannelCreate(_NTO_CHF_FIXED_PRIORITY);
 
 	printf("INIT: Channel ID: %d\n", channel_id);
 	printf("INIT: Process ID: %d\n", getpid());
@@ -54,7 +54,7 @@ void* client(void* args) {
 	int client_id = pthread_self();
 	printf("CLIENT%d: Hello, from client!\n", client_id);
 
-	set_priority(client_priorities[client_id]);
+	set_priority(client_priorities[client_id - 2]);
 	printf("CLIENT%d: Priority set to %d!\n",
 			client_id, get_priority());
 
