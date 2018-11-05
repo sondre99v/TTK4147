@@ -20,10 +20,4 @@ $(TARGET): $(OBJECTS)
 	$(COMPILER) $(CFLAGS) -c -o $@ $< 
 # cleaning 
 clean: 
-	rm -rf $(TARGET) $(OBJECTS) 
-# cleaning and building
-rebuild:
-	make clean
-	make all
-local:
-	make COMPILER=gcc LDFLAGS="-pthread -Ofast" CFLAGS+="-fdump-tree-optimized -Wall -DRUN_ON_LOCALHOST -Ofast"
+	rm -rf $(TARGET) $(OBJECTS)

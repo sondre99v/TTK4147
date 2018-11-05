@@ -10,6 +10,7 @@ void* listener_thread_function(void* args);
 void* controller_thread_function(void* args);
 
 #define CLOCK_SOURCE CLOCK_REALTIME
+#define SIMULATION_DURATION 2ULL // [s]
 
 #define Kp 2e1 // [1]
 #define Ki 1e3 // [s^-1]
@@ -38,8 +39,8 @@ int main (int argc, char* argv[]) {
 	pthread_join(controller_thread, NULL);
 
 
-	/* Since the listener thread locks on UDP receive, and no timeout
-	 * is spesified, the listener thread will never return.
+	/* Since the listener thread locks on UDP receive, and no time-out
+	 * is specified, the listener thread will never return.
 	 * Therefore, we don't join it, and let the OS mop it up for us.
 	 */
 
@@ -93,7 +94,7 @@ void* controller_thread_function(void* args) {
 	clock_gettime(CLOCK_SOURCE, &waketime);
 
 	unsigned int i;
-	for (i = 0; i < 2ULL * iterations_per_second; i++) {
+	for (i = 0; i < SIMULATION_DURATION * iterations_per_second; i++) {
 		waketime = timespec_add(waketime, period);
 
 		float reference = (i < iterations_per_second) ? 1.0 : 0.0;
