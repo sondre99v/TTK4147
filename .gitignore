@@ -11,3 +11,6 @@
 *.order
 *.symvers
 
+.metadata/*
+*.metadata/*
+ex09/.metadata/
